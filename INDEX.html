@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Plataforma E-Learning - Panel de Control</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .paso {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .paso.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .paso-titulo {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .paso-numero {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 45px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .instruccion {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .instruccion strong {
+            color: #667eea;
+        }
+
+        .enlace {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 10px 5px 10px 0;
+            transition: all 0.3s;
+        }
+
+        .enlace:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .enlace.secundario {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .enlace.secundario:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .botones {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-anterior {
+            background: #ddd;
+            color: #333;
+        }
+
+        .btn-anterior:hover {
+            background: #bbb;
+        }
+
+        .btn-siguiente {
+            background: #667eea;
+            color: white;
+            flex-grow: 1;
+        }
+
+        .btn-siguiente:hover {
+            background: #764ba2;
+        }
+
+        .btn-siguiente:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .progreso {
+            background: #f0f0f0;
+            height: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progreso-barra {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .checklist {
+            list-style: none;
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .checklist li:before {
+            content: "☐ ";
+            font-weight: bold;
+            color: #667eea;
+            margin-right: 10px;
+        }
+
+        .advertencia {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .exito {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .paso-final {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .paso-final h2 {
+            color: #28a745;
+            font-size: 2.5em;
+            margin: 20px 0;
+        }
+
+        .paso-final p {
+            font-size: 1.2em;
+            margin: 15px 0;
+        }
+
+        .resumen-pasos {
+            background: #f8f9ff;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .resumen-pasos h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .resumen-pasos ol {
+            margin-left: 20px;
+            line-height: 2;
+        }
+
+        .resumen-pasos li {
+            margin-bottom: 10px;
+        }
+
+        .codigo {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            margin: 10px 0;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .resaltado {
+            background: #fffcc7;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>🚀 Tu Plataforma E-Learning</h1>
+            <p>Panel de Control - Sigue los pasos exactos</p>
+        </div>
+
+        <!-- PROGRESO -->
+        <div style="padding: 20px 40px;">
+            <div class="progreso">
+                <div class="progreso-barra" id="progresoBarra" style="width: 0%;">
+                    <span id="progresotexto">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENIDO DE PASOS -->
+        <div class="content">
+
+            <!-- PASO 0: BIENVENIDA -->
+            <div class="paso active" id="paso0">
+                <div class="paso-titulo">
+                    <span class="paso-numero">!</span>
+                    BIENVENIDA
+                </div>
+
+                <div class="instruccion">
+                    ¡Hola! Tu plataforma está lista. Ahora vamos a ponerla en internet en <strong>1 hora</strong>.
+                </div>
+
+                <div class="resumen-pasos">
+                    <h3>📋 Lo que vamos a hacer:</h3>
+                    <ol>
+                        <li>Comprar hosting en Hostinger (15 minutos)</li>
+                        <li>Configurar tu dominio (5 minutos)</li>
+                        <li>Subir tu código a internet (30 minutos)</li>
+                        <li>Verificar que funciona (5 minutos)</li>
+                    </ol>
+                </div>
+
+                <div class="exito">
+                    <strong>✓ Buena noticia:</strong> No necesitas saber programación. Solo seguir estos pasos.
+                </div>
+
+                <div class="instruccion">
+                    <strong>Costo:</strong> €20/mes (un café) ☕
+                </div>
+            </div>
+
+            <!-- PASO 1: COMPRAR HOSTING -->
+            <div class="paso" id="paso1">
+                <div class="paso-titulo">
+                    <span class="paso-numero">1</span>
+                    COMPRA HOSTING EN HOSTINGER (15 minutos)
+                </div>
+
+                <div class="instruccion">
+                    Tu plataforma debe vivir en internet. Para eso necesitas "alquilar un espacio" llamado <strong>hosting</strong>.
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 1.1:</strong> Abre en tu navegador:
+                    <div class="codigo">https://www.hostinger.es</div>
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 1.2:</strong> Haz click en <span class="resaltado">PLANES DE HOSTING</span>
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 1.3:</strong> Busca el plan <span class="resaltado">VPS CLOUD</span> (es el que necesitas)
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 1.4:</strong> Haz click en <span class="resaltado">ELEGIR PLAN</span>
+                </div>
+
+                <div class="advertencia">
+                    ⚠️ Te pedirá un dominio. Puedes:
+                    <br>✓ Comprar uno nuevo (€10/año)
+                    <br>✓ Usar uno que ya tengas
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 1.5:</strong> Sigue los pasos de pago. Cuando termines:
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Guarda tu usuario</li>
+                        <li>Guarda tu contraseña</li>
+                        <li>Guarda tu dominio</li>
+                    </ul>
+                </div>
+
+                <div class="exito">
+                    ✓ Ahora tienes tu espacio en internet
+                </div>
+            </div>
+
+            <!-- PASO 2: ACCEDER A HOSTINGER -->
+            <div class="paso" id="paso2">
+                <div class="paso-titulo">
+                    <span class="paso-numero">2</span>
+                    ACCEDE A TU PANEL DE HOSTINGER
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 2.1:</strong> Abre en tu navegador:
+                    <div class="codigo">https://hpanel.hostinger.com</div>
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 2.2:</strong> Login con:
+                    <br>📧 Tu email: <input type="text" id="email" placeholder="tu@email.com">
+                    <br>🔐 Tu contraseña: (la que creaste)
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 2.3:</strong> Haz click en <span class="resaltado">HOSTING</span>
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 2.4:</strong> Busca tu dominio en la lista y haz click
+                </div>
+
+                <div class="exito">
+                    ✓ Ya estás dentro de tu panel
+                </div>
+            </div>
+
+            <!-- PASO 3: ADMINISTRADOR DE ARCHIVOS -->
+            <div class="paso" id="paso3">
+                <div class="paso-titulo">
+                    <span class="paso-numero">3</span>
+                    ABRE EL ADMINISTRADOR DE ARCHIVOS
+                </div>
+
+                <div class="instruccion">
+                    Aquí es donde subirás tu plataforma. Es como un explorador de carpetas, pero en internet.
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 3.1:</strong> En tu panel, busca <span class="resaltado">Administrador de Archivos</span> o <span class="resaltado">File Manager</span>
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 3.2:</strong> Haz click
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 3.3:</strong> Se abrirá una ventana con carpetas. Busca la carpeta <span class="resaltado">public_html</span>
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 3.4:</strong> Haz doble click en <span class="resaltado">public_html</span> para abrirla
+                </div>
+
+                <div class="advertencia">
+                    ℹ️ Esta carpeta es donde vivirán los archivos de tu plataforma. Debe estar VACÍA o casi vacía.
+                </div>
+
+                <div class="exito">
+                    ✓ Ahora estás en la carpeta correcta
+                </div>
+            </div>
+
+            <!-- PASO 4: COMPILAR CODIGO -->
+            <div class="paso" id="paso4">
+                <div class="paso-titulo">
+                    <span class="paso-numero">4</span>
+                    PREPARAR TU CÓDIGO
+                </div>
+
+                <div class="instruccion">
+                    Tu código está en tu ordenador. Necesitas prepararlo para que funcione en internet.
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 4.1:</strong> En tu Mac, abre la aplicación <span class="resaltado">Terminal</span>
+                    <br>(Búscala como si fuera Safari o Excel)
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 4.2:</strong> Copia esto entero y pégalo. Luego presiona Enter:
+                </div>
+
+                <div class="codigo">cd "/Users/sebastianrozo/Desktop/Plataforma E-learning/frontend" && npm run build</div>
+
+                <div class="advertencia">
+                    ⏳ Espera. Puede demorar 1-2 minutos. Verás mucho texto. Eso es normal.
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 4.3:</strong> Cuando termine, verás un mensaje. Si dice "done" o "success", está listo.
+                </div>
+
+                <div class="exito">
+                    ✓ Tu código está preparado para internet
+                </div>
+            </div>
+
+            <!-- PASO 5: COPIAR ARCHIVOS -->
+            <div class="paso" id="paso5">
+                <div class="paso-titulo">
+                    <span class="paso-numero">5</span>
+                    SUBE LOS ARCHIVOS A HOSTINGER
+                </div>
+
+                <div class="instruccion">
+                    Ahora copiaremos los archivos de tu ordenador a Hostinger.
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 5.1:</strong> En tu ordenador, abre el Finder (la carpeta)
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 5.2:</strong> Ve a:
+                    <div class="codigo">Desktop/Plataforma E-learning/frontend/dist</div>
+                </div>
+
+                <div class="advertencia">
+                    ⚠️ Si no ves la carpeta "dist", vuelve al Paso 4 (no se completó bien)
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 5.3:</strong> Selecciona TODOS los archivos (Cmd + A)
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 5.4:</strong> Copia (Cmd + C)
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 5.5:</strong> Vuelve al navegador (donde está Hostinger abierto)
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 5.6:</strong> En el Administrador de Archivos de Hostinger, busca el botón <span class="resaltado">SUBIR</span> o <span class="resaltado">UPLOAD</span>
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 5.7:</strong> Haz click. Te pedirá que selecciones archivos.
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 5.8:</strong> Selecciona TODO lo de la carpeta "dist" y haz click en <span class="resaltado">ABRIR</span>
+                </div>
+
+                <div class="advertencia">
+                    ⏳ Espera a que suban. Puede demorar 2-3 minutos según tu internet.
+                </div>
+
+                <div class="exito">
+                    ✓ Tus archivos están en Hostinger
+                </div>
+            </div>
+
+            <!-- PASO 6: VERIFICAR -->
+            <div class="paso" id="paso6">
+                <div class="paso-titulo">
+                    <span class="paso-numero">6</span>
+                    VERIFICA QUE FUNCIONA
+                </div>
+
+                <div class="instruccion">
+                    Ya está. Ahora vamos a ver tu plataforma en internet.
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 6.1:</strong> Abre una nueva pestaña en tu navegador
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 6.2:</strong> Escribe tu dominio:
+                    <br><input type="text" id="dominio" placeholder="ejemplo: misitio.com (sin www)">
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 6.3:</strong> Presiona Enter
+                </div>
+
+                <div class="advertencia">
+                    ⏳ Si no carga, espera 5 minutos. Los servidores a veces tardan.
+                </div>
+
+                <div class="instruccion">
+                    <strong>¿Ves tu plataforma?</strong>
+                    <br>✓ Si: ¡FUNCIONA! Ve al siguiente paso.
+                    <br>✗ Si no: Vuelve al Paso 5 (los archivos no se subieron bien)
+                </div>
+            </div>
+
+            <!-- PASO 7: SUBIR BACKEND -->
+            <div class="paso" id="paso7">
+                <div class="paso-titulo">
+                    <span class="paso-numero">7</span>
+                    SUBE EL MOTOR (Backend) - Elige una opción
+                </div>
+
+                <div class="instruccion">
+                    Tu plataforma se ve bonita, pero no funciona todavía. Necesitas subir el "motor" (backend).
+                </div>
+
+                <div class="advertencia">
+                    ⚠️ Tienes 2 opciones. Lee bien y elige una.
+                </div>
+
+                <div style="border: 3px solid #28a745; padding: 20px; border-radius: 10px; margin: 20px 0; background: #f0fff4;">
+                    <h3 style="color: #28a745; margin-bottom: 10px;">✓ OPCIÓN FÁCIL (Recomendada)</h3>
+                    <p style="margin: 10px 0;"><strong>Railway para el Backend</strong></p>
+                    <p style="margin: 10px 0;">✓ Más fácil (solo clickeos)</p>
+                    <p style="margin: 10px 0;">✓ Gratis los primeros meses</p>
+                    <p style="margin: 10px 0;">✓ Automático</p>
+                    <p style="margin: 10px 0;">👉 <strong>Sigue los pasos 7.A abajo</strong></p>
+                </div>
+
+                <div style="border: 3px solid #ffc107; padding: 20px; border-radius: 10px; margin: 20px 0; background: #fffbf0;">
+                    <h3 style="color: #ff9800; margin-bottom: 10px;">⚡ OPCIÓN COMPLICADA</h3>
+                    <p style="margin: 10px 0;"><strong>Hostinger para el Backend</strong></p>
+                    <p style="margin: 10px 0;">✗ Más complicado (necesita Terminal)</p>
+                    <p style="margin: 10px 0;">⚠️ Requiere conocimientos de SSH</p>
+                    <p style="margin: 10px 0;">👉 <strong>Solo si entiendes de Terminal. Si no, elige la Opción Fácil.</strong></p>
+                </div>
+
+                <hr style="margin: 30px 0; border: none; border-top: 2px solid #ddd;">
+
+                <h3 style="color: #667eea; margin: 30px 0 20px;">7.A - OPCIÓN FÁCIL: Railway</h3>
+
+                <div class="instruccion">
+                    <strong>Paso 7.A.1:</strong> Abre en tu navegador:
+                    <div class="codigo">https://railway.app</div>
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 7.A.2:</strong> Haz click en <span class="resaltado">START NOW</span>
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 7.A.3:</strong> Elige <span class="resaltado">Create a new project</span>
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 7.A.4:</strong> Elige <span class="resaltado">Deploy from GitHub</span>
+                </div>
+
+                <div class="advertencia">
+                    ℹ️ Si no tienes GitHub, créalo gratis en https://github.com/signup
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 7.A.5:</strong> Conecta tu cuenta GitHub
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 7.A.6:</strong> Busca tu repositorio <span class="resaltado">elearning-platform</span> y selecciónalo
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 7.A.7:</strong> Haz click en <span class="resaltado">Deploy Now</span>
+                </div>
+
+                <div class="advertencia">
+                    ⏳ Espera 3-5 minutos. Verás que compila y se despliega.
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 7.A.8:</strong> Te dará una URL. Cópiala. Será algo como:
+                    <div class="codigo">https://tu-api-production-xxxx.railway.app</div>
+                </div>
+
+                <div class="instruccion">
+                    <strong>Paso 7.A.9:</strong> Esta URL es tu Backend. Guárdala.
+                </div>
+
+                <div class="exito">
+                    ✓ ¡Tu Motor está en internet!
+                </div>
+
+                <hr style="margin: 30px 0; border: none; border-top: 2px solid #ddd;">
+
+                <div class="instruccion" style="background: #fff3cd; border-left: 4px solid #ff9800;">
+                    <strong>7.B - OPCIÓN COMPLICADA: Hostinger</strong>
+                    <p style="margin-top: 10px;">Esto requiere Terminal y SSH. Es para usuarios más avanzados.</p>
+                    <p>Si llegaste aquí y no entiendes qué es SSH, <strong>elige la Opción Fácil (Railway).</strong></p>
+                    <p style="margin-top: 10px;">Contacta al soporte si necesitas ayuda con esto.</p>
+                </div>
+
+            </div>
+
+            <!-- PASO FINAL -->
+            <div class="paso" id="pasoFinal">
+                <div class="paso-final">
+                    <h2>🎉 ¡FELICIDADES!</h2>
+                    <p>Tu plataforma está en internet.</p>
+                    <p style="font-size: 3em; margin: 20px 0;">✨</p>
+                </div>
+
+                <div class="exito" style="text-align: center; font-size: 1.2em;">
+                    <strong>Lo que lograste:</strong>
+                </div>
+
+                <div class="resumen-pasos">
+                    <ul style="list-style: none;">
+                        <li>✓ Dominio: <input type="text" id="dominiofinal" disabled style="width: 200px;"></li>
+                        <li>✓ Plataforma viva 24/7</li>
+                        <li>✓ Sin tu ordenador encendido</li>
+                        <li>✓ Profesional y segura</li>
+                    </ul>
+                </div>
+
+                <div class="instruccion">
+                    <strong>Próximos pasos (cuando quieras):</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Agregar tus cursos</li>
+                        <li>Agregar estudiantes</li>
+                        <li>Cobrar con Stripe</li>
+                        <li>¡Empezar a ganar dinero!</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px;">
+                    <p style="font-size: 1.3em; color: #667eea; font-weight: bold;">
+                        Ahora tienes una plataforma profesional.<br>
+                        Ya puedes vender tus cursos.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BOTONES DE NAVEGACION -->
+        <div style="padding: 0 40px 40px;">
+            <div class="botones">
+                <button class="btn-anterior" id="btnAnterior" onclick="pasoAnterior()">← Anterior</button>
+                <button class="btn-siguiente" id="btnSiguiente" onclick="pasoSiguiente()">Siguiente →</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let pasoActual = 0;
+        const totalPasos = 9; // 0-8 (bienvenida + 7 pasos + final)
+
+        function mostrarPaso(numero) {
+            // Ocultar todos
+            document.querySelectorAll('.paso').forEach(p => p.classList.remove('active'));
+            
+            // Mostrar paso actual
+            const pasos = ['paso0', 'paso1', 'paso2', 'paso3', 'paso4', 'paso5', 'paso6', 'paso7', 'pasoFinal'];
+            document.getElementById(pasos[numero]).classList.add('active');
+
+            // Actualizar progreso
+            const progreso = Math.round((numero / (totalPasos - 1)) * 100);
+            document.getElementById('progresoBarra').style.width = progreso + '%';
+            document.getElementById('progresotexto').textContent = progreso + '%';
+
+            // Actualizar botones
+            document.getElementById('btnAnterior').disabled = numero === 0;
+            document.getElementById('btnSiguiente').disabled = numero === totalPasos - 1;
+
+            // Cambiar texto del botón final
+            if (numero === totalPasos - 1) {
+                document.getElementById('btnSiguiente').textContent = '🎉 ¡LISTO!';
+                // Llenar el dominio si el usuario lo escribió
+                const dominio = document.getElementById('dominio').value;
+                if (dominio) {
+                    document.getElementById('dominiofinal').value = dominio;
+                }
+            } else {
+                document.getElementById('btnSiguiente').textContent = 'Siguiente →';
+            }
+
+            // Scroll al inicio
+            window.scrollTo(0, 0);
+        }
+
+        function pasoSiguiente() {
+            if (pasoActual < totalPasos - 1) {
+                pasoActual++;
+                mostrarPaso(pasoActual);
+            }
+        }
+
+        function pasoAnterior() {
+            if (pasoActual > 0) {
+                pasoActual--;
+                mostrarPaso(pasoActual);
+            }
+        }
+
+        // Inicializar
+        mostrarPaso(0);
+
+        // Permitir navegar con teclas
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') pasoSiguiente();
+            if (e.key === 'ArrowLeft') pasoAnterior();
+        });
+    </script>
+</body>
+</html>
