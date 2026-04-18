@@ -1,1 +1,1 @@
-web: npm --prefix backend install && npm --prefix backend start
+web: cd backend && node src/index.js
